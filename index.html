@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>婚礼邀请函</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://gitee.com/cdg_cn/wedding/raw/master/photos/wedding.png">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f9f9f9;
+            overflow: hidden;
+            /* 防止用户手动滚动 */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            margin: auto;
+            padding: 0;
+            box-sizing: border-box;
+            overflow-y: scroll;
+            height: 100vh;
+            position: relative;
+            /* 为放置音乐按钮准备 */
+        }
+
+        .photos {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            /* 确保图片间无缝拼接 */
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border: none;
+            /* 移除图片边框 */
+            border-radius: 0;
+            /* 显式设置圆角为0 */
+        }
+
+        /* 添加音乐控制样式 */
+        .music-control {
+            position: fixed;
+            /* 固定位置 */
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .music-control img {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* 提示用户取消静音 */
+        .unmute-prompt {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 3;
+        }
+    </style>
+    <!-- <script src="https://cdn.bootcss.com/jquery/3.6.0/jquery.min.js"></script> -->
+    <!-- <script src="https://smtpjs.com/v3/smtp.js"></script> -->
+</head>
+
+<body>
+    <!-- 音乐控制按钮 -->
+    <div class="music-control" onclick="toggleMusic()">
+        <img id="music-icon" src="images/pause.png" alt="播放音乐">
+    </div>
+    <div class="container" id="scrollContainer">
+        <div class="photos">
+            <!-- 动态生成50个以上的图片项 -->
+        </div>
+    </div>
+
+    <!-- 嵌入音频文件 -->
+    <audio id="background-music" loop muted>
+        <source
+            src="https://gitee.com/cdg_cn/wedding/raw/master/music/1.mp3"
+            type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- 提示用户取消静音 -->
+    <div class="unmute-prompt" onclick="unmuteAudio()">点击取消静音</div>
+
+    <script>
+        // 假设有50张图片，路径分别为 images/photo1.jpg 到 images/photo50.jpg
+        const numberOfPhotos = 18;
+        const photoContainer = document.querySelector('.photos');
+
+        for (let i = 1; i <= numberOfPhotos; i++) {
+            const photoItem = document.createElement('div');
+            photoItem.className = 'photo-item';
+
+            const img = document.createElement('img');
+            img.src = `https://gitee.com/cdg_cn/wedding/raw/master/photos/${i}.jpg`;
+            img.alt = `照片${i}`;
+
+            if (i == 18) {
+                const a = document.createElement('a');
+                a.href = `https://surl.amap.com/Z3US27SL1tj`;
+                a.alt = `地图`;
+                a.appendChild(img);
+                photoItem.appendChild(a);
+                photoContainer.appendChild(photoItem);
+            }
+            else {
+                photoItem.appendChild(img);
+                photoContainer.appendChild(photoItem);
+            }
+        }
+
+        let scrollInterval;
+        let isAutoScrollEnabled = true;
+
+        // 自动滚动函数
+        function startAutoScroll() {
+            scrollInterval = requestAnimationFrame(autoScroll);
+        }
+
+        function autoScroll() {
+            const container = document.getElementById('scrollContainer');
+            let scrollTop = container.scrollTop;
+            if (scrollTop + container.clientHeight < container.scrollHeight) {
+                container.scrollTop = scrollTop + 1.2;
+                scrollInterval = requestAnimationFrame(autoScroll); // 使用requestAnimationFrame优化性能
+            }
+        }
+
+        // 暂停自动滚动
+        function pauseAutoScroll() {
+            cancelAnimationFrame(scrollInterval);
+        }
+
+        // 开始自动滚动
+        setTimeout(startAutoScroll, 2000); // 2秒后开始滚动
+
+        // 音乐控制函数
+        function toggleMusic() {
+            const musicIcon = document.getElementById('music-icon');
+            const audio = document.getElementById('background-music');
+
+            if (audio.paused) {
+                audio.play();
+                musicIcon.src = 'images/play.png'; // 更换为播放图标
+            } else {
+                audio.pause();
+                musicIcon.src = 'images/pause.png'; // 更换为暂停图标
+            }
+        }
+
+        // 取消静音
+        function unmuteAudio() {
+            const audio = document.getElementById('background-music');
+            audio.muted = false;
+            document.querySelector('.unmute-prompt').style.display = 'none';
+            toggleMusic()
+        }
+
+        // 切换自动滚动状态
+        document.getElementById('scrollContainer').addEventListener('click', function () {
+            if (isAutoScrollEnabled) {
+                pauseAutoScroll();
+            } else {
+                startAutoScroll();
+            }
+            isAutoScrollEnabled = !isAutoScrollEnabled;
+        });
+
+        // 页面加载完成后自动播放静音音乐
+        window.onload = function () {
+            const audio = document.getElementById('background-music');
+            audio.play().catch(error => {
+                console.error('自动播放失败:', error);
+            });
+        };
+    </script>
+</body>
+
+</html>
