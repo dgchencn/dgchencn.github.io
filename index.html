@@ -108,6 +108,9 @@
         const photoContainer = document.querySelector('.photos');
 
         for (let i = 1; i <= numberOfPhotos; i++) {
+            if (i == 6) {
+                continue;
+            }
             const photoItem = document.createElement('div');
             photoItem.className = 'photo-item';
 
