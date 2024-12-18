@@ -141,7 +141,7 @@
             const container = document.getElementById('scrollContainer');
             let scrollTop = container.scrollTop;
             if (scrollTop + container.clientHeight < container.scrollHeight) {
-                container.scrollTop = scrollTop + 1.2;
+                container.scrollTop = scrollTop + 1;
                 scrollInterval = requestAnimationFrame(autoScroll); // 使用requestAnimationFrame优化性能
             }
         }
