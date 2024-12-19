@@ -108,9 +108,6 @@
         const photoContainer = document.querySelector('.photos');
 
         for (let i = 1; i <= numberOfPhotos; i++) {
-            if (i == 6) {
-                continue;
-            }
             const photoItem = document.createElement('div');
             photoItem.className = 'photo-item';
 
@@ -118,7 +115,7 @@
             img.src = `https://gitee.com/cdg_cn/wedding/raw/master/photos/${i}.jpg`;
             //img.alt = `照片${i}`;
 
-            if (i == 18) {
+            if (i == 17) {
                 const a = document.createElement('a');
                 a.href = `https://surl.amap.com/Z3US27SL1tj`;
                 a.alt = `地图`;
